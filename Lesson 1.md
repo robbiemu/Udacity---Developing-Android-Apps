@@ -18,18 +18,28 @@ You can connect a real device as well.
 
 #### Gradle
 
-gradle manages the build process for you.
+Gradle is the build system that packages up and compiles Android Apps. Android Studio automatically generates Gradle files for your application, including the `build.gradle` for your app and module and the `settings.gradle` for your app. You do not need to create these files, they are created for you by the IDE.
+
+TIP: if your project is having Gradle issues, sometimes clicking the **Sync Project with Gradle Files** button helps. Running clean and rebuilding your project can also help resolve errors.
 
 ### New projects
 Suggest to set target to current and minimum as far back as you can go based on the features you want to support. Typically this will not be further back than  v.21
 
 #### Application
 
-The application as a whole is what is build and run
+The application as a whole is what is build and run. 
+
+An application is a loose collection of classes for the user to interact with. The UI components are organized into Activities, which we learned about in this lesson. The behind-the-scenes work is handled by other Android classes including:
+
+* Content Providers (Lesson 4) - Manage app data.
+* Services (Lesson 6) - Run background tasks with no UI, such as downloading information or playing music.
+* Broadcast Receivers (Lesson 6) - Listen for and respond to system announcements, such as the screen being turned on or losing network connectivity.
 
 #### [Activity](http://developer.android.com/guide/components/activities.html)
 
 An Activity is an application component that provides a screen with which users can interact in order to do something, such as dial the phone, take a photo, send an email, or view a map. Each activity is given a window in which to draw its user interface.
+
+By default a `MainActivity` class is creted for you.
 
 #### [Fragment](http://developer.android.com/guide/components/fragments.html)
 
@@ -55,6 +65,24 @@ Usually a fragment's page will be defined in xml, and the top and outer must ele
 * [Grid View](http://developer.android.com/guide/topics/ui/layout/gridview.html)
 
 Items in a list view (and other scrollable views/layouts) are built with an innermost collection of views, a mid-tier view to contain them, and an out [ScrollView](http://developer.android.com/reference/android/widget/ScrollView.html) to provide scrolling through the data.
+
+### Views and XML
+
+To describe our user interface, we describe layouts using XML. The layout defines a collection of views, view groups and the relationships between them. Our layouts are stored in the app/src/main/res/layout directory. To turn an xml layout into java view objects, we need to **inflate** the layout. After the layout is inflated, we need to associate it with an Activity or Fragment. This process of inflating and associating is a little different depending on whether it’s a layout for an Activity or Fragment.
+
+#### For an Activity
+
+We inflate the layout and associate it with the Activity by calling the `setContentView` method in `onCreate` in our Activity:
+
+`setContentView(R.layout.activity_main);`
+
+#### For a Fragment
+
+In our Fragment classes we inflate the layout in the `onCreateView` method, which includes a `LayoutInflater` as a parameter:
+
+`View rootView = inflater.inflate(R.layout.fragment_main, container, false);`
+
+The root view, or view element which contains all the other views, is returned by the inflate method of the LayoutInflater. We then should return this rootView for the onCreateView.
 
 ### ListView
 
