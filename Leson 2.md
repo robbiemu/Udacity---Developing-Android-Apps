@@ -76,3 +76,20 @@ Menu items are specified under `res/menu` in XML. They must then be inflated in 
         inflater.inflate(R.menu.forecastfragment, menu);
     }
 
+3. In `onOptionsItemSelected` you can check which item was selected and react appropriately.
+
+### strings.xml
+
+Android has a specific file for all of the strings in your app, stored in `values/strings.xml`. Why? Well besides further helping separate content from layout, the strings file also makes it easy to localize applications. You simply create a `values-language/strings.xml` files for each locale you want to localize to. For example, if you want to create a Japanese version of your app, you would create a `values-ja/strings.xml`. Note, if you put the flag `translatable="false"` in your string it means the string need not be translated. This is useful when a string is a proper noun.
+
+### JSON Parsing
+
+Often when you request data from an API this data is returned in a format like JSON. This is the case for Open Weather Map API. Once you have this JSON string, you need to parse it.
+
+If you’re unfamiliar with JSON, take a look at [this tutorial](http://www.w3schools.com/json/).
+
+In Android, you can use the `JSONObject` class, documented [here](http://developer.android.com/reference/org/json/JSONObject.html). To use this class you take your JSON string and create a new object:
+
+    JSONObject myJson = new JSONObject(myString);
+    
+And then you can use various `get` methods to extract data, such as `getJSONArray` and `getLong`.
