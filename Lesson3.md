@@ -23,3 +23,19 @@ To add a new interaction page to the app, you are addding essentially a complete
 
 This will create a layout XML file, and a new activity java file.
 
+### [Intents](http://developer.android.com/guide/components/intents-common.html)
+
+When switching activities within an app, you call `startActivity`. You do not dirctly pass the class that you are handing off control to, instead you use something called intents. Intents can explicitly name a class, or not. Ones that do are called _explicit intents_. By comparison, `implicit intents` pass an action and data (such as a URI), to a the system, to locate apps that have registered to handle this intent. This is commonly done to view web pages, dial an number, or working with contact data.
+
+Calls to `intent` can pass a value with `putExtra(valueTag, value)`. This is then received by the `activity` or one of it's `fragments` like so:
+
+    Intent intent = getActivity().getIntent();
+    if (intent != null && intent.hasExtra(valueTag)) {
+        String value = intent.getStringExtra(valueTag);
+        // do stuff
+    }
+    
+### [Settings](http://developer.android.com/guide/topics/ui/settings.html)
+
+Preferences can be rendered for you by the system. It will create the UI necessary for the preferences specified. Each preference is stored in the [Shared Preferences](http://developer.android.com/reference/android/content/SharedPreferences.html) file for you, in k/v pairs.
+
