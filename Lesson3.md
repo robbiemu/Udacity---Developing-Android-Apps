@@ -39,3 +39,95 @@ Calls to `intent` can pass a value with `putExtra(valueTag, value)`. This is the
 
 Preferences can be rendered for you by the system. It will create the UI necessary for the preferences specified. Each preference is stored in the [Shared Preferences](http://developer.android.com/reference/android/content/SharedPreferences.html) file for you, in k/v pairs.
 
+The steps to adding preferences to your app are:
+
+1. ensure there is a `res/xml` folder. If you need to create it, make it of type xml data.
+2. create a `pref_general.xml` file to specify the prefs the system should crate a panel for. The [Defining Prefs](https://developer.android.com/guide/topics/ui/settings.html#DefiningPrefs) documenttion helps spell this out. _Ensure that values are not hard coded in, but instead coded in to `strings`._
+3. set up a `SettingsActivity` extending `PreferenceActivity` to View the settings.
+
+    package com.example.android.sunshine.app;
+
+    import android.os.Bundle;
+    import android.preference.ListPreference;
+    import android.preference.Preference;
+    import android.preference.PreferenceActivity;
+    import android.preference.PreferenceManager;
+
+    /**
+    * A {@link PreferenceActivity} that presents a set of application settings.
+    * <p>
+    * See <a href="http://developer.android.com/design/patterns/settings.html">
+    * Android Design: Settings</a> for design guidelines and the <a
+    * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
+    * API Guide</a> for more information on developing a Settings UI.
+    */
+    public class SettingsActivity extends PreferenceActivity
+            implements Preference.OnPreferenceChangeListener {
+
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            addPreferencesFromResource(R.xml.pref_general);
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
+
+            client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        }
+
+        /**
+        * Attaches a listener so the summary is always updated with the preference value.
+        * Also fires the listener once, to initialize the summary (so it shows up before the value
+        * is changed.)
+        */
+        private void bindPreferenceSummaryToValue(Preference preference) {
+            // Set the listener to watch for value changes.
+            preference.setOnPreferenceChangeListener(this);
+
+            // Trigger the listener immediately with the preference's
+            // current value.
+            onPreferenceChange(preference,
+                    PreferenceManager
+                            .getDefaultSharedPreferences(preference.getContext())
+                            .getString(preference.getKey(), ""));
+        }
+
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object value) {
+            String stringValue = value.toString();
+
+            if (preference instanceof ListPreference) {
+                // For list preferences, look up the correct display value in
+                // the preference's 'entries' list (since they have separate labels/values).
+                ListPreference listPreference = (ListPreference) preference;
+                int prefIndex = listPreference.findIndexOfValue(stringValue);
+                if (prefIndex >= 0) {
+                    preference.setSummary(listPreference.getEntries()[prefIndex]);
+                }
+            } else {
+                // For other preferences, set the summary to the value's simple string representation.
+                preference.setSummary(stringValue);
+            }
+            return true;
+        }
+
+    }
+
+4. change your `ActionBarActivities` to bring up the settings activity, like so:
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    
+5. Add code like the following to a `fragment` or `activity` to retreive a value:
+
+    SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+    String location = SP.getString(getString(R.string.KEY), getString(R.string.KEY_DEFAULT_VALUE));
