@@ -34,6 +34,52 @@ Calls to `intent` can pass a value with `putExtra(valueTag, value)`. This is the
         String value = intent.getStringExtra(valueTag);
         // do stuff
     }
+
+
+#### [ShareAction](http://developer.android.com/training/sharing/shareaction.html)
+
+You can use an `ActionProvider` to manage the appearance and function of menu items for you, in order to provide a sense of integration into the external app.
+
+You decalre the item in the appropriate `menu.xml` like:
+
+    <item
+            android:id="@+id/menu_item_share"
+            android:showAsAction="ifRoom"
+            android:title="Share"
+            android:actionProviderClass=
+                "android.widget.ShareActionProvider" />
+                
+And then initialize it in the `fragment` or `activity` with:
+
+    private ShareActionProvider mShareActionProvider;
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.detail, menu);
+
+        // - ShareAction
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider(); // MenuItemCompat.getActionProvider(item) for v7 compat apps
+
+        String shareString = ((TextView) findViewById(R.id.TEXT_IN_APP)).getText() + " #TEXT_MESSAGE";
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareString);
+
+        if(mShareActionProvider !=null){
+    //      Log.d(DetailActivity.class.getSimpleName(), "INTO share Provider--" + mShareActionProvider.toString());
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
+        else{
+    //      Log.d(DetailActivity.class.getSimpleName(), "NO share Provider--");
+        }
+
+
     
 ### [Settings](http://developer.android.com/guide/topics/ui/settings.html)
 
@@ -131,3 +177,26 @@ The steps to adding preferences to your app are:
 
     SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
     String location = SP.getString(getString(R.string.KEY), getString(R.string.KEY_DEFAULT_VALUE));
+
+### BroadcastReceiver
+
+You use special intents sent with `sendBroadcast` to trigger broadcast messages any app can subscribe to. A receiving app must provide a `BroadcastReceiver` class to handle whatever action it should trigger with the broadcast. You can register the class to receive broadcasts in one of two ways:
+
+* in the manifast
+
+    <receiver android:name=".MyReceiver">
+        <intent-filter></intent-filter>
+    </receiver>
+
+or 
+
+* dynamically
+
+    registerReceiver( myReceiver, intentFilter );
+    
+The intent-filter must specify the type of broadcast you want to receive: `<action android:name="com.myapp.MYBROADCASTTYPE"/>` or:
+
+    IntentFilter if = new IntentFilter("com.myapp.MYBROADCASTTYPE"); 
+    registerReceiver(myReceiver, intentFilter);
+
+Manifest intents will receive broadcasts, even starting your app if need be to process the broadcast. Dynamic intents will only receive broadcasts while the app is running.
