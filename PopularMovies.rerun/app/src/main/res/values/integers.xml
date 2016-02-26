@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="pref_tmdb_results_num_movies">20</integer>
+</resources>

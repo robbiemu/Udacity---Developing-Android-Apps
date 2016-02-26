@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- MovieDetailsActivity -->
+    <string name="title_activity_movie_details">Movie Details</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- TMDB settings -->
+    <string name="pref_header_tmdb">theMovieDB</string>
+
+    <string name="pref_title_tmdb_query_sort_by">Sort by</string>
+    <string-array name="pref_entries_tmdb_sort_by">
+        <item>popularity</item>
+        <item>release date</item>
+        <item>revenue</item>
+        <item>primary release date</item>
+        <item>original title</item>
+        <item>average vote</item>
+        <item>vote count</item>
+    </string-array>
+    <string-array name="pref_values_tmdb_sort_by">
+        <item>popularity</item>
+        <item>release_date</item>
+        <item>revenue</item>
+        <item>primary_release_date</item>
+        <item>original_title</item>
+        <item>vote_average</item>
+        <item>vote_count</item>
+    </string-array>
+    <string name="pref_tmdb_defaults_sort_by">popularity</string>
+
+    <string name="pref_title_tmdb_sort_dir">Sort order</string>
+    <string name="pref_summary_tmdb_sort_dir_asc">Ascending</string>
+    <string name="pref_summary_tmdb_sort_dir_desc">Descending</string>
+    <string name="pref_text_tmdb_sort_dir_asc">asc</string>
+    <string name="pref_text_tmdb_sort_dir_desc">desc</string>
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <!-- TMDB queries and rendering -->
+    <string name="tmdb_bp_BASE_URL">https://api.themoviedb.org/3/discover/movie</string>
+    <string name="filename_posters_svg_list">posters_svg.list</string>
+    <string name="tmdb_mg_BASE_URL">https://api.themoviedb.org/3/movie</string>
+    <string name="average_rating_short">avg. rating:</string>
+</resources>

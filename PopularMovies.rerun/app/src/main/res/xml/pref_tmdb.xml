@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Main Settings -->
+
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <ListPreference
+        android:key="pref_tmdb_bp_query_sort_by"
+        android:defaultValue="@string/pref_tmdb_defaults_sort_by"
+        android:summary="%s"
+        android:entries="@array/pref_entries_tmdb_sort_by"
+        android:entryValues="@array/pref_values_tmdb_sort_by"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_tmdb_query_sort_by" />
+
+    <SwitchPreference
+        android:key="pref_tmdb_bp_query_sort_dir"
+        android:defaultValue="@bool/pref_tmdb_defaults_sort_dir"
+        android:summaryOff="@string/pref_summary_tmdb_sort_dir_asc"
+        android:summaryOn="@string/pref_summary_tmdb_sort_dir_desc"
+        android:switchTextOff="@string/pref_text_tmdb_sort_dir_asc"
+        android:switchTextOn="@string/pref_text_tmdb_sort_dir_desc"
+        android:title="@string/pref_title_tmdb_sort_dir" /><!-- not sure why texts arent displaying -->
+
+
+    <!-- Dev settings -->
+</PreferenceScreen>
