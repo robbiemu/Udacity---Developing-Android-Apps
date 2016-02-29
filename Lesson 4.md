@@ -42,6 +42,12 @@ The database is managed with the [SQLightOpenHelper](http://developer.android.co
 
 _see also [SQLite Database documentation](http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html)._
 
+#### Queries
+
+Queries can be executed from the `SQLiteDatabase` object (from [getReadableDatabase](http://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html#getReadableDatabase(%29)) with the [query](http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html#query(java.lang.String, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String, java.lang.String, java.lang.String, java.lang.String%29) method. This is just a helper function for constructing and executing queries. All variations of `query` return a [cursor](http://developer.android.com/reference/android/database/Cursor.html) object over the results of the query. Typically, you would call `moveToFirst` and later `moveToNext` to traverse the return values.  
+
+Typically, you would then validate the results before using them, and close the sql connection.
+
 ### Testing
 
 [Tests](http://www.tutorialspoint.com/junit/junit_quick_guide.htm) ensure that functional aspects of the application perform to specification. This helps in the lifecycle of product maintanence and extension. Android provides a [testing structure](http://developer.android.com/tools/testing/testing_android.html) to assist in implementing tests for your application.
@@ -49,3 +55,14 @@ _see also [SQLite Database documentation](http://developer.android.com/reference
 Unit Tests ensure function of specific parts of the system. Integration tests ensure the app behaves as expected to user or foreign API input (receving a push, for example).
 
 _see also: [Getting started with testing](http://developer.android.com/training/testing/start/index.html)
+
+### [Content Providers](http://developer.android.com/guide/topics/providers/content-providers.html)
+
+[ContentProviders](http://developer.android.com/reference/android/content/ContentProvider.html) abstract the details of data storage and retreival, generifying it so data can be shard between apps in a standard way. This fulfills the pattern of a _model_.
+
+#### To build a ContentProvider
+
+![](unnamed.png)
+
+determine URIs — this is the URI for queries **to** the `ContentProvider`, in order to retrieve unique data from it. 
+
