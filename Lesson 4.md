@@ -1,68 +1,76 @@
 # [Developing Android Apps](https://www.udacity.com/course/progress#!/c-ud853)
 @ [Udacity](https://www.udacity.com)
 _via [Springboard](http://www.springboard.com)'s [Android App Development](https://www.springboard.com/learning-paths/android/ path
-## Lesson 2
+## Lesson 4
 
-### [Activity Lifecycle](https://s3.amazonaws.com/content.udacity-data.com/course/ud853/Android_Activity_LifeCyle.png)
+_because of its scope, lesson 4 was split into 3 lessons_
 
-![](Android_Activity_LifeCyle.png)
+###4a
+#### Lifecycle
+[Process and Application Lifecycle](http://developer.android.com/guide/topics/processes/process-lifecycle.html)
+[Managing the Activity Lifecycle](http://developer.android.com/training/basics/activity-lifecycle/index.html)
+the [Activities](http://developer.android.com/guide/components/activities.html) guide has a graphic demonstration of the lifecycle
+#### baked-in SQLite data storage
+![](4a.png)
+_[overview of changes](https://www.youtube.com/watch?v=Sif4ZAL8iU8)_
+_[optional SQLite tutorial](https://www.udacity.com/course/viewer#!/c-ud853/l-3621368730/m-2602608541)_
+— you should (also) ensure that you understand SELECT w/ INNER JOIN, and the basic db crud queries
+[Storage Options](http://developer.android.com/guide/topics/data/data-storage.html)
+[Saving Data](http://developer.android.com/training/basics/data-storage/index.html)
+[Saving Data in SQL Databases](http://developer.android.com/training/basics/data-storage/databases.html)
+— there is a section on Contracts, which isn't really a structure in android SDK. I think it is covered in the following:
+[BaseColumns](http://developer.android.com/reference/android/provider/BaseColumns.html)
+[SQLiteOpenHelper](http://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html)
+[SQLiteDatabase](http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html)
 
-You activty will run though the active life time and visible life time many times.
+#### a brief intro to testing
+— _some lovely references that might be more useful if you are reviewing your notes:_
+[Testing Concepts](http://developer.android.com/tools/testing/testing_android.html)
+_[Building Effective Unit Tests](http://developer.android.com/training/testing/unit-testing/index.html)_
+_[Best Practices for Testing](http://developer.android.com/training/testing/index.html)_
+There are two different kinds available out of the box:
+[android.test](http://developer.android.com/reference/android/test/package-summary.html)
+[junit.framework.test](http://developer.android.com/reference/junit/framework/Test.html)
 
-#### Active Life Cycle
+###4b
+![](4b.png)
+####Content Providers
+[Content Provider basics](http://developer.android.com/guide/topics/providers/content-provider-basics.html)
+[Creating a Content Provider](http://developer.android.com/guide/topics/providers/content-provider-creating.html)
+[ContentProvider](http://developer.android.com/reference/android/content/ContentProvider.html)
 
-Before the `onPause` is called and the acitivty is obscured.
+####Testing It
+[Testing Your Content Provider](http://developer.android.com/training/testing/integration-testing/content-provider-testing.html)
 
-Pause processes that don't draw the app in the background (modals only partially obscure the app).
+####Content URIs
+[Content Uris](http://developer.android.com/reference/android/content/ContentUris.html)
+[Uri.Builder](http://developer.android.com/reference/android/net/Uri.Builder.html) and 
+[UriMatcher](http://developer.android.com/reference/android/content/UriMatcher.html)
+[parseId](http://developer.android.com/reference/android/content/ContentUris.html#parseId%28android.net.Uri%29) implements a common convention for API communications
 
-Apps can be terminated to preserve resources for the system. When this happens, their onPause and onStop events are triggered. On lod devices (pre honycomb, I think he said), it can happen only at onPause, so it is best when developing for those devices to consider app termination at onPause. For more recent devices, onStop is sufficient. Listeners, etc (for example, an async_task running to update the UI) should be disconnected during onPause or onStop since it is doing work that will not be displayed. In general all work that would not want to be paused could instead be moved outside of an application, as to a Service.
+####Using it
+[accessing your content from the Content Provider](http://developer.android.com/guide/topics/providers/content-provider-basics.html#ClientProvider)
+Provider in [Manifest](http://developer.android.com/guide/topics/manifest/provider-element.html)
 
-#### Visible Life Cycle
+[In review video](https://www.udacity.com/course/viewer#!/c-ud853/l-3599339441/m-3655209144)
 
-In order to maintain state when an app is paused, there are a series of activity methods:
+###4c
+####Loaders
+[Loaders](http://developer.android.com/guide/components/loaders.html)
+[AsyncTaskLoader](http://developer.android.com/reference/android/content/AsyncTaskLoader.html)
+[Loader](http://developer.android.com/reference/android/content/Loader.html)
+[LoaderManager.LoaderCallbacks](http://developer.android.com/reference/android/app/LoaderManager.LoaderCallbacks.html)
 
-* _Active_
-* onSaveInstanceState
-* onPause
-* _Terminated_
-* onCreate
-* onRestoreInstanceState (only used if not first launch of app), called with bundle with which to restore state.
+**[Overview of how these classes are used in the app to get data and store through the content uri ](https://www.udacity.com/course/viewer#!/c-ud853/l-3681658545/m-3666728992)**
+also [Misc notes for 4c](https://www.udacity.com/course/viewer#!/c-ud853/l-3681658545/m-3649658972) - contains an overview diagram
 
-### State data
+####Content.CursorLoaders
+[CursorLoader](http://developer.android.com/reference/android/content/CursorLoader.html)
 
-Android offers 3 options to simplify storing state data: SharedPreferences, Files, and [SQLite Database](http://developer.android.com/guide/topics/data/data-storage.html#db).
+_see the example on creating and referencing Projections for the query [here](https://www.udacity.com/course/viewer#!/c-ud853/l-3681658545/e-3650909019/m-3606839932)._ Personally in this app I favor creating and Interface and implementing it as needed.
 
-_see also: [Data Storage](http://developer.android.com/guide/topics/data/index.html)_
+####ShareActionProvider
+_remember [Adding An Easy Share Action](http://developer.android.com/training/sharing/shareaction.html)?_
+[ShareActionProvider](http://developer.android.com/reference/android/widget/ShareActionProvider.html)
 
-#### SQLLite
-
-To support SQLlite, Android implements a contract -> [content provider](http://developer.android.com/guide/topics/providers/content-providers.html) pattern. The [BaseColumns](http://developer.android.com/reference/android/provider/BaseColumns.html) class can be extended to create schema details about the tables to be queried. I comes with an _ID autoincrement already defined.
-
-The database is managed with the [SQLightOpenHelper](http://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html) class.
-
-_see also [SQLite Database documentation](http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html)._
-
-#### Queries
-
-Queries can be executed from the `SQLiteDatabase` object (from [getReadableDatabase](http://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html#getReadableDatabase(%29)) with the [query](http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html#query(java.lang.String, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String, java.lang.String, java.lang.String, java.lang.String%29) method. This is just a helper function for constructing and executing queries. All variations of `query` return a [cursor](http://developer.android.com/reference/android/database/Cursor.html) object over the results of the query. Typically, you would call `moveToFirst` and later `moveToNext` to traverse the return values.  
-
-Typically, you would then validate the results before using them, and close the sql connection.
-
-### Testing
-
-[Tests](http://www.tutorialspoint.com/junit/junit_quick_guide.htm) ensure that functional aspects of the application perform to specification. This helps in the lifecycle of product maintanence and extension. Android provides a [testing structure](http://developer.android.com/tools/testing/testing_android.html) to assist in implementing tests for your application.
-
-Unit Tests ensure function of specific parts of the system. Integration tests ensure the app behaves as expected to user or foreign API input (receving a push, for example).
-
-_see also: [Getting started with testing](http://developer.android.com/training/testing/start/index.html)
-
-### [Content Providers](http://developer.android.com/guide/topics/providers/content-providers.html)
-
-[ContentProviders](http://developer.android.com/reference/android/content/ContentProvider.html) abstract the details of data storage and retreival, generifying it so data can be shard between apps in a standard way. This fulfills the pattern of a _model_.
-
-#### To build a ContentProvider
-
-![](unnamed.png)
-
-determine URIs — this is the URI for queries **to** the `ContentProvider`, in order to retrieve unique data from it. 
-
+_[making the Content Provider accessible](http://developer.android.com/guide/topics/providers/content-provider-creating.html#ProviderElement) and [Permissions](http://developer.android.com/guide/topics/providers/content-provider-creating.html#Permissions)_
