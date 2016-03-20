@@ -23,4 +23,19 @@ So far we've used an array or cursor adapter to bind data to a list view with ju
         // Use placeholder image for now
         ImageView iconView = (ImageView) view.findViewById(R.id.list_item_icon); // this id is in the xml layout
         iconView.setImageResource(Utility.getImageResource(weatherId)); // this will ultimately be a R.drawable._id_ that was already defined for the icon for the weather
-  
+
+* see more about: ViewTypes
+* ViewHolder — and see:
+  * [Making ListView Scrolling Smooth - with a ViewHolder](http://developer.android.com/training/improving-layouts/smooth-scrolling.html#ViewHolder))
+  * [Adding a contect Badge to a Listview](http://developer.android.com/training/contacts-provider/display-contact-badge.html#ListView)
+* string localization: 
+  * [xliff tags](https://developer.android.com/distribute/tools/localization-checklist.html)
+  * [Formatting and styling](http://developer.android.com/guide/topics/resources/string-resource.html#FormattingAndStyling)
+  * [context.getString()](http://developer.android.com/reference/android/content/Context.html#getString(int,) method
+
+### Note on complex layouts
+Complex layouts can be expensive. The guideline they give is to go shallow: "More siblings and less children". A rule-of-thumb might be "no more than roughly 80 total views, about 10 per view".
+
+You can inspect your layout hierarchy with the [Hierarchy Viewer](http://developer.android.com/tools/help/hierarchy-viewer.html).
+
+_see also [Optimizing your UI](http://developer.android.com/tools/debugging/debugging-ui.html), and [Lint](http://developer.android.com/tools/help/lint.html)._
