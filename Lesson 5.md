@@ -63,6 +63,7 @@ _examples of specific-target folders_
 * **important** `layout` -> `layout-sw720dp` _for smallest width supportable with this layout in dp_
 * `layout` -> `layout-desk` _for docked devices_
 * `layout` -> `laout-stylus` _for specific input devices -- is there one for mouse?_
+* `drawable` -> `drawable-v21` _for Android SDK 21 Lollipop and above_
 
 _see also_
 * [supporting multiple screens](http://developer.android.com/guide/practices/screens_support.html)
@@ -131,4 +132,174 @@ In the _master view_ (the list view that populates details to the detail view), 
 _see also_
 * [Fragments](http://developer.android.com/guide/components/fragments.html)
 
-### StateListDrawable
+### General UI features programmers must face 
+
+#### [StateList Drawable](http://developer.android.com/guide/topics/resources/drawable-resource.html#StateList)
+
+You can use states associated with an item like a listview to animate or visually represent change to the user. The basic path for this is:
+
+1. save the colors, etc, that will change in `res/values` or `drawable` as appropriate (like in colors.xml)
+2. ensure the listView keeps track fo the data with a `res/values/styles.xml` like:
+    <resources>
+        <style name="ForecastListStyle">
+            <item name="android:choiceMode">singleChoice</item>
+        </style>
+    </resources>
+_doing it with a style allows you to easily set different use cases: like if you only want the highlight in tablet mode, you would have a `styles-sw600dp.xml`._
+And you would add the style as an attribute to the ListView: `style="@style/ForecastListStyle"`.
+3. Provide a drawable to use as the background for selected items:
+    <?xml version="1.0" encoding="utf-8"?>
+    <selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <!-- State when a row is being pressed, but hasn't yet been activated (finger down) -->
+        <item android:state_pressed="true">
+            <ripple android:color="@color/grey" /><!-- requiresSDK v21+ -->
+        </item>
+        <!-- When the view is "activated".  In SINGLE_CHOICE_MODE, it flags the active row
+            of a ListView -->
+        <item android:state_activated="true" android:drawable="@color/sunshine_light_blue" />
+        <!-- Default, "just hangin' out" state. -->
+        <item android:drawable="@android:color/transparent" />
+    </selector>
+And you would add the drawable as the background attribute to the ListView **items**: `android:background="@drawable/my_selector"`
+
+
+_see also_
+* [themes](http://developer.android.com/guide/topics/ui/themes.html)
+* [ListView attr:choiceMode](http://developer.android.com/reference/android/widget/AbsListView.html#attr_android:choiceMode)
+
+#### Restoring dynamic ListView position
+
+When you rotate your tablet the activity restarts. You need to use the **Bundle** usually called `savedInstateState` in each fragment that should save their state, in order to preserve it through rotation (or going to settings and back). An example would be the listview selection, whihc may not be visible if it was far enough down in the list, once the rotation has completed.
+
+ This is done with the recipe:
+ 
+ 1.  create a position variable, and store a handy reference to the Views/Viewgroups who need to keep state data:
+    public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+        private ListView mListView;
+        private int mPosition = ListView.INVALID_POSITION;
+
+        private static final String SELECTED_KEY = "selected_position";
+        ...
+        mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        mListView.setAdapter(mForecastAdapter);
+
+2. Store the position/other data when it is set:
+    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            ....
+            mPosition = position;
+        }
+    });
+    ...
+    if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+        // The listview probably hasn't even been populated yet.  Actually perform the
+        // swapout in onLoadFinished.
+        mPosition = savedInstanceState.getInt(SELECTED_KEY);
+    }
+3. Override `onSaveInstanceState` to save the state before the activity closes shop:
+     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
+        // so check for that before storing.
+        if (mPosition != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
+    }
+4. and in `onLoadFinished` the listviw should be ready to recieve its previous position:
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (mPosition != ListView.INVALID_POSITION) {
+            // If we don't need to restart the loader, and there's a desired position to restore
+            // to, do so now.
+            mListView.smoothScrollToPosition(mPosition);
+        }
+     }
+     
+A general solution that doesn't specifically take into account dynamic loader based lists is at [denevell's blog](https://blog.denevell.org/android-save-list-position-rotation-backpress.html):
+##### Save ListView position after rotation or backpress
+You can restore the position and state of a ListView by saving the ListView’s instance state.
+
+You then restore it after the ListView’s adapter is next set.
+
+###### Restoring it after rotation:
+
+1. Save the ListView state on onSaveInstanceState:
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+        outState.putParcelable(LIST_INSTANCE_STATE, yourListView.onSaveInstanceState());
+    }
+2. Then later, get that back out of the Bundle in onCreate:
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(savedInstanceState!=null) {
+            mListInstanceState = savedInstanceState.getParcelable(LIST_INSTANCE_STATE);
+        }
+    }
+3. Then, after the ListView’s adapter is set, you can restore the instance state:
+    
+###### Restoring it after a backpress:
+
+If on after a backpresss your ListView is recreated via `onResume()`, then
+
+Ensure you save the instance state on `onPause()` instead, or in addition, to the above.
+Restore the instance state as above.
+
+#### [Layout Aliases](http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters)
+
+Layout aliases let you specify the same layout at different specifications. For example, in both landscape and tablets, you could write the same layout twice under `res/layout-sw600dp` and `res/layout-land`, or you can write it once under `layout` and then write references to it in those two folders. Ultimately you are _increasing_ the number of files in your code, but you now only have to maintain the one copy. 
+
+_notes:_
+* Using `res/values[-*]/refs` instead of `res/values[-*]/layout` is the norm now.
+* _Don't_ create a `refs.xml` for the default value, ie `res/values/refs.xml`. That one would ahve a duplicate name setting.
+
+#### Conditional formatting
+
+To support different renderings at different screen segments, you commonly will know the screen format at the activity level. You want to plumb that through (or in some other way expose) to the fragments and adapters (for dynamic data) from that point. For example:
+
+* in MainActivity:
+    private boolean mTwoPane;
+    protected void onCreate(Bundle savedInstanceState) {
+        ...
+        SomeFragment someFragment = ((SomeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_some));
+        someFragment.setUseWideLayout(mTwoPane); // mTwoPane has been set in onCreate just above here, reflecting two pane layouts like for landscape orientation
+        ...
+* then in SomeFragment:
+    private boolean mTwoPane;
+
+    public void setUseWideLayout(boolean twoPane) {
+        mTwoPane = twoPane;
+        if (mSomeAdapter != null){
+            mSomeAdapter.setUseWideLayout(mTwoPane);
+        }
+    }  
+    
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // The SomeAdapter will take data from a source and
+        // use it to populate the ListView it's attached to.
+        mSomeAdapter = new SomeAdapter(getActivity(), null, 0);
+        mSomeAdapter.setUseWideLayout(mTwoPane);
+        ...
+* and finally in SomeAdapter:
+    private boolean mUseWideLayout;
+    public void setUseWideLayout(boolean useWideLayout) {
+        mUseWideLayout = useWideLayout;
+    }
+    ...// newView and/or bindView would have conditional selections of the outer ListView, etc
+
+#### Applying Visual Mocks
+_note: here is the [Visual Mocks with Redlines for Sunshine](https://www.udacity.com/wiki/ud853/design_assets)_
+
+_see also_
+
+* [Android Design Guide: Metrics and Grids](https://developer.android.com/design/style/metrics-grids.html)
+* Basics guide to [Styling the ActionBar](https://developer.android.com/training/basics/actionbar/styling.html)
+* [displayOptions attribute](http://developer.android.com/reference/android/R.attr.html#displayOptions)
+* [Android Design Guide: Action Bar](http://developer.android.com/design/patterns/actionbar.html)
+* [Devloper's Guide to the Action Bar](http://developer.android.com/guide/topics/ui/actionbar.html)
+* [Using a Logo Instead of an Icon](http://developer.android.com/guide/topics/ui/actionbar.html#Logo)
