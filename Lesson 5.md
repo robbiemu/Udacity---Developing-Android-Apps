@@ -303,3 +303,63 @@ _see also_
 * [Android Design Guide: Action Bar](http://developer.android.com/design/patterns/actionbar.html)
 * [Devloper's Guide to the Action Bar](http://developer.android.com/guide/topics/ui/actionbar.html)
 * [Using a Logo Instead of an Icon](http://developer.android.com/guide/topics/ui/actionbar.html#Logo)
+
+#### Accessibility
+
+note: designing for visual impairment: [TalkBack](http://developer.android.com/training/accessibility/accessible-app.html#contentdesc)
+
+You can simply use the checklist (below) to walk through design considerations before publishing the app. If you are considering your accessibility earlier than that, the android design guide on accessability (link below) is a better place to start.
+
+_see also_
+* [Documentation on Accessibility](http://developer.android.com/guide/topics/ui/accessibility/index.html) 
+* [Accessibility Developer Checklist](http://developer.android.com/guide/topics/ui/accessibility/checklist.html) 
+* Android Design Guide: [Accessibility](http://developer.android.com/design/patterns/accessibility.html) 
+* [Accessibility Testing Checklist](http://developer.android.com/tools/testing/testing_accessibility.html)
+
+#### Creating a custom view
+
+Inherit from `View`. View is a nice UI base (using a Canvas) for system elements. `SurfaceView` is faster, and meant for video or games.
+
+Provide these three constructors to support the view's creation in code, through a resource or through inflation:
+    public class MyView extends View {
+        public MyView (Context c){
+            super(c);
+        }
+        public MyView (Context c, AttributeSet attrs) {
+            super(c, attrs);
+        } 
+        public MyView (Context c, AttributeSet attrs, int DefaultStyle) {
+            super(c, attrs, DefaultStyle);
+        }
+    }
+
+Override the `onMeasure(w, h)` handler (method), which indicated the views size. Otherwise it will be 100x100px. For each int passed in, use `MeasureSpec`'s `getMode` to find the mode (exactly, at most, etc) and `getSize` to get the physical size to set. Call the `setMeasuredDimension` method with your heights and widths there, to actually set the displayed size.
+
+Override `onDraw(Canvas c)` in order to provide content to view. This is called often, up to several (dozen even) times per second. Object creation and destruction is not to be handled here, instead move them to the class scope.
+
+_see also_
+* [Custom Views](http://developer.android.com/training/custom-views/index.html)
+* [Canvas and Drawables](http://developer.android.com/guide/topics/graphics/2d-graphics.html)
+* [Custom Drawing](http://developer.android.com/training/custom-views/custom-drawing.html) Guide
+
+##### Adding accessibility to custom views
+
+The simplest way is to use the `contentDescription` attr, of course. You can also do this programmatically from the view in the activity/fragment, when setting up views. The most robust way is within the view itself:
+
+    onSomeDataInViewHasChanged(...){
+        if(AccessibilityManager.getInstance(mContext).isEnabled()){
+            sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGE);
+    ...
+    @Override
+    public boolean dispatchPopulateAccessibilityEvent (AccessibilityEvent ev){
+        ev.getText().add(somevalue);
+        return true;
+        
+        
+_see also_
+* [AccessabilityEventSource](http://developer.android.com/reference/android/view/accessibility/AccessibilityEventSource.html)
+
+##### Miscellaneous Interactivity additions to custom views
+
+* [Motion Event Docs](http://developer.android.com/reference/android/view/MotionEvent.html)
+* [Making Custom View Interactive](http://developer.android.com/training/custom-views/making-interactive.html)
