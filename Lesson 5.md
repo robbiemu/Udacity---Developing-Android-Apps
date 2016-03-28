@@ -342,6 +342,8 @@ _see also_
 * [Canvas and Drawables](http://developer.android.com/guide/topics/graphics/2d-graphics.html)
 * [Custom Drawing](http://developer.android.com/training/custom-views/custom-drawing.html) Guide
 
+A zipfile of the custom View I made for the class can be found in this project. It is also available [as a gist](https://gist.github.com/robbiemu/0ad1ae50e0146325c02d).
+
 ##### Adding accessibility to custom views
 
 The simplest way is to use the `contentDescription` attr, of course. You can also do this programmatically from the view in the activity/fragment, when setting up views. The most robust way is within the view itself:
