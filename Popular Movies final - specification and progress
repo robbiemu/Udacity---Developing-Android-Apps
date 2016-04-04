@@ -1,0 +1,26 @@
+Things I want to accomplish with my Popular movies app:
+
+* fix the settings: 
+  * [OPTIONAL] integrate twitter share: if I find a separate pane is necessary, add it in and fix back navigation from the first screen pink config launcher
+  * otherwise, get rid of the teired settings and make it a single pane.
+* ensure that being able to share a movie from the details pane is not part of the project. Maybe add it anyway
+* [OPTIONAL] spruce up or replace the text only SVG
+* [OPTIONAL] add the same spacing to vertical as horizontal in posters view 
+* [OPTIONAL] support Similar tag from `movies/id/similar` in the api
+* [OPTIONAL - strongly rec.] change color scheme to red... red/black?
+
+* view and play trailers, reviews (`movies/id/reviews` and `movies/id/videos`)
+* implement a favorites database, markable star -> favorite at details page
+* add settings option to allow users to view their favorites, and change the `FloatingActionButton` to go directly to favorites and only show up when the settings option isn't also to the favorites.
+
+* optimize display for tablet
+
+## Progress
+Tuesday — completed lesson 6
+Wednesday — read the task papers for Final Project, organized, prepared, celebrated completing lesson 6
+Thursday — 
+    build the SQLite db for Favorites, refactored a bit to seperate concerns
+    translated over to Services from AsyncTasks
+Friday — implemented trailers, reviews, _need to reformat the XML a bit_
+Saturday — implemented Favorites, _need to configure FloatingActionButton_,  some OPTIONALs
+Sunday — optimize for tablet

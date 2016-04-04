@@ -92,7 +92,7 @@ To _design_ a non-UI fragment (which are run during the activity, but never need
 * _in the Fragment's_ `onCreate`: `setRetainInstance(true);`
 * _in the fragments's_ `onCreateView`: `return null`
 
-You would then create two activities under `layout` and `layout-600dp` or some other subset of display types. In the activity for the non-master-detail-flow variant, you would have a separate detail activity, that need not be changed. In the main activity class (this could actually be two different classes since we ahve 2 different activities), you need to conditionally load the detail fragment in the right-side container (a `FrameLayout`). Since this will have the framelayout, detecting that feature is a good way to do it:
+You would then create two activities under `layout` and `layout-600dp` or some other subset of display types. In the activity for the non-master-detail-flow variant, you would have a separate detail activity, that need not be changed. In the main activity class (this could actually be two different classes since we have 2 different activities), you need to conditionally load the detail fragment in the right-side container (a `FrameLayout`). Since this will have the framelayout, detecting that feature is a good way to do it:
 
 _in onCreate_
         setContentView(R.layout.activity_main);
@@ -108,7 +108,7 @@ _in onCreate_
 
 In the _master view_ (the list view that populates details to the detail view), instead of using an intent to launch a new activity, you need to change the fragment loaded in the master-detail-view:
 
-1. put this Callback interface from the gist in ForecastFragment, and implement it in MainActivity:
+1. put this Callback interface from the gist in DetailFragment, and implement it in MainActivity:
     /**
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of item
@@ -120,7 +120,7 @@ In the _master view_ (the list view that populates details to the detail view), 
          */
         public void onItemSelected(Uri dateUri);
     }
-2. in the listView's `onItemClickListener` (likely set up in ForecastFragment, rendered from the CursorLoader), replace the intent call with a call to `onItemSelected` from the Callback implementation in MainActivity (hint: you might want to store pointer to the activity in the method in which a Fragment is associated with its activity, for reuse here).
+2. in the listView's `onItemClickListener` (likely set up in MainActivityFragment, rendered from the CursorLoader), replace the intent call with a call to `onItemSelected` from the Callback implementation in MainActivity (hint: you might want to store pointer to the activity in the method in which a Fragment is associated with its activity, for reuse here).
 3. in the MainActivity, override the `onItemSelected` callback using a property set to flag which state (twopane or single pane) the device is rendering in. Render an intent if it is false, but use a fragment transaction to add the fragment to the container in the current layout if true. Use a Bundle to pass to `onCreateLoader` in ForecastFragment, to pass in the URI in this case.
 4. Use this code in other activities, such as the settings activity, to return back to the main activity rather than restarting it when navigating up:
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
