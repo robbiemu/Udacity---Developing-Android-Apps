@@ -24,3 +24,10 @@ Thursday —
 Friday — implemented trailers, reviews, _need to reformat the XML a bit_
 Saturday — implemented Favorites, _need to configure FloatingActionButton_,  some OPTIONALs
 Sunday — optimize for tablet
+    I ran into a problem optimizing for tablet. Solution was found by doing the ui completely separately: [3-2-1 rotate](https://github.com/robbiemu/3-2-1-rotate)
+    This was completed by Tuesday, the 5th.
+    Implemented the solution for the project by the 8th. (Moving the old probject over was a careful proceedure)
+
+Completion: On the 9th I completed the floating action bar and favorites views, tidied up code, and finished.
+
+# [Final Project](https://github.com/robbiemu/Popular-Movies)
