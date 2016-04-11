@@ -11,4 +11,4 @@ Please see the [wiki](https://github.com/robbiemu/Udacity---Developing-Android-A
 
 ## Final Project
 
-The midterm is in the PopularMovies.rerun folder here. The final is [here](https://github.com/robbiemu/Popular-Movies).
+The midterm project is in the PopularMovies.rerun folder here. The final is [here](https://github.com/robbiemu/Popular-Movies).
