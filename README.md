@@ -8,3 +8,7 @@ As the first course in the Android Developer Nanodegree, Developing Android Apps
 
 ## *a form of certification of completing a free or cert-less online class*
 Please see the [wiki](https://github.com/robbiemu/Udacity---Developing-Android-Apps/wiki) for details
+
+## Final Project
+
+The midterm is in the PopularMovies.rerun folder here. The final is [here](https://github.com/robbiemu/Popular-Movies).
